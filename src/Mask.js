@@ -38,7 +38,7 @@ class Mask extends Component {
 					animate();
 
           const loader = new THREE.GLTFLoader();
-					const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet.gltf`
+					const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet/DamagedHelmet.gltf`
           
 					loader.load(url, function (gltf) {
 
