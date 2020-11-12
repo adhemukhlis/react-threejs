@@ -23,7 +23,7 @@ class Mask extends Component {
 
 			new THREE
 				.RGBELoader()
-				.load(`https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/equirectangular/royal_esplanade_1k.hdr`, function (texture) {
+				.load(`https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/textures/equirectangular/royal_esplanade_1k.hdr`, function (texture) {
 
 					const envMap = pmremGenerator
 						.fromEquirectangular(texture)
@@ -38,7 +38,7 @@ class Mask extends Component {
 					animate();
 
           const loader = new THREE.GLTFLoader();
-					const url = `https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf`
+					const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet.gltf`
           
 					loader.load(url, function (gltf) {
 
