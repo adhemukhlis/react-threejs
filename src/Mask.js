@@ -64,7 +64,7 @@ class Mask extends Component {
 			renderer.toneMappingExposure = 1;
 			renderer.outputEncoding = THREE.sRGBEncoding;
 			document
-				.body
+				.getElementById('container_model')
 				.appendChild(renderer.domElement);
 			const pmremGenerator = new THREE.PMREMGenerator(renderer);
 			pmremGenerator.compileEquirectangularShader();
@@ -88,14 +88,14 @@ class Mask extends Component {
 		}
     let animate = () => {
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+    //   requestAnimationFrame(animate);
     }
 		init();
 
 	}
 
 	render() {
-		return (<div style={{width:'50vw'}} ref={ref => (this.mount = ref)}/>)
+		return (<div id="container_model"/>)
 	}
 }
 export default Mask;
