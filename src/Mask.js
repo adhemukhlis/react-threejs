@@ -23,7 +23,7 @@ class Mask extends Component {
       scene = new THREE.Scene();
 
       new THREE.RGBELoader().load(
-        `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/textures/equirectangular/royal_esplanade_1k.hdr`,
+        `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/textures/equirectangular/venice_sunset_1k.hdr`,
         function (texture) {
           const envMap = pmremGenerator.fromEquirectangular(texture).texture;
 
