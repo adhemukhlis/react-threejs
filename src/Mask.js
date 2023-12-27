@@ -9,12 +9,14 @@ class Mask extends Component {
       // camera = new THREE.PerspectiveCamera(90, window.innerWidth /
       // window.innerHeight, .3, 500);
       camera = new THREE.PerspectiveCamera(
+        // 45,
         45,
         window.innerWidth / window.innerHeight,
         0.25,
         20
       );
       camera.position.set(-1.8, 0.6, 2.7);
+      // camera.position.set(200, 0.5, 100, 100);
 
       // camera.rotation.y = 45 / 180 * Math.PI; camera.position.x = 0;
       // camera.position.y = 1; camera.position.z = 2;
@@ -34,9 +36,26 @@ class Mask extends Component {
           animate();
 
           const loader = new THREE.GLTFLoader();
-          const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet/DamagedHelmet.gltf`;
+          const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/Jesko/scene.gltf`;
 
           loader.load(url, function (gltf) {
+
+						// sizing scale
+            let desiredScale = 4; //the length of the palette
+            let box = new THREE.Box3();
+            box.setFromObject(gltf.scene);
+            let size = new THREE.Vector3();
+            box.getSize(size);
+            let maxSize = 0;
+            if (size.x >= size.z && size.x >= size.y) {
+              maxSize = size.x;
+            } else if (size.y >= size.x && size.y >= size.z) {
+              maxSize = size.y;
+            } else if (size.z >= size.x && size.z >= size.y) {
+              maxSize = size.z;
+            }
+						gltf.scene.scale.setScalar(1 / (maxSize / desiredScale ))
+						// sizing scale
             gltf.scene.traverse(function (child) {
               if (child.isMesh) {
               }
