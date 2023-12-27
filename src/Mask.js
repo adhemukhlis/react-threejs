@@ -1,101 +1,93 @@
-import React, {Component} from "react";
-import THREE from './three';
+import React, { Component } from "react";
+import THREE from "./three";
 
 class Mask extends Component {
+  componentDidMount() {
+    let scene, camera, renderer;
 
-	componentDidMount() {
-		let scene,
-			camera,
-			renderer;
+    const init = () => {
+      // camera = new THREE.PerspectiveCamera(90, window.innerWidth /
+      // window.innerHeight, .3, 500);
+      camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.25,
+        20
+      );
+      camera.position.set(-1.8, 0.6, 2.7);
 
-		const init = () => {
+      // camera.rotation.y = 45 / 180 * Math.PI; camera.position.x = 0;
+      // camera.position.y = 1; camera.position.z = 2;
+      scene = new THREE.Scene();
 
-			// camera = new THREE.PerspectiveCamera(90, window.innerWidth /
-			// window.innerHeight, .3, 500);
-			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.25, 20);
-			camera
-				.position
-				.set(- 1.8, 0.6, 2.7);
+      new THREE.RGBELoader().load(
+        `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/textures/equirectangular/royal_esplanade_1k.hdr`,
+        function (texture) {
+          const envMap = pmremGenerator.fromEquirectangular(texture).texture;
 
-			// camera.rotation.y = 45 / 180 * Math.PI; camera.position.x = 0;
-			// camera.position.y = 1; camera.position.z = 2;
-			scene = new THREE.Scene();
+          scene.background = envMap;
+          scene.environment = envMap;
 
-			new THREE
-				.RGBELoader()
-				.load(`https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/textures/equirectangular/royal_esplanade_1k.hdr`, function (texture) {
+          texture.dispose();
+          pmremGenerator.dispose();
 
-					const envMap = pmremGenerator
-						.fromEquirectangular(texture)
-						.texture;
-
-					scene.background = envMap;
-					scene.environment = envMap;
-
-					texture.dispose();
-					pmremGenerator.dispose();
-
-					animate();
+          animate();
 
           const loader = new THREE.GLTFLoader();
-					const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet/DamagedHelmet.gltf`
-          
-					loader.load(url, function (gltf) {
+          const url = `https://raw.githubusercontent.com/adhemukhlis/react-threejs/main/assets/models/gltf/DamagedHelmet/DamagedHelmet.gltf`;
 
-						gltf
-							.scene
-							.traverse(function (child) {
+          loader.load(url, function (gltf) {
+            gltf.scene.traverse(function (child) {
+              if (child.isMesh) {
+              }
+            });
 
-								if (child.isMesh) {}
+            scene.add(gltf.scene);
 
-							});
+            animate();
+          });
+        }
+      );
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight - 4);
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1;
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      document
+        .getElementById("container_model")
+        .appendChild(renderer.domElement);
+      const pmremGenerator = new THREE.PMREMGenerator(renderer);
+      pmremGenerator.compileEquirectangularShader();
+      let controls = new THREE.OrbitControls(camera, renderer.domElement);
+      // controls.addEventListener('change', renderer);
+      controls.addEventListener("change", animate);
+      controls.minDistance = 2;
+      controls.maxDistance = 10;
+      controls.target.set(0, 0, -0.2);
+      controls.update();
+      window.addEventListener(
+        "resize",
+        () => {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
 
-						scene.add(gltf.scene);
+          renderer.setSize(window.innerWidth, window.innerHeight);
 
-						animate();
-
-					});
-
-				});
-			renderer = new THREE.WebGLRenderer({antialias: true});
-			renderer.setPixelRatio(window.devicePixelRatio);
-			renderer.setSize(window.innerWidth, window.innerHeight-4);
-			renderer.toneMapping = THREE.ACESFilmicToneMapping;
-			renderer.toneMappingExposure = 1;
-			renderer.outputEncoding = THREE.sRGBEncoding;
-			document
-				.getElementById('container_model')
-				.appendChild(renderer.domElement);
-			const pmremGenerator = new THREE.PMREMGenerator(renderer);
-			pmremGenerator.compileEquirectangularShader();
-			let controls = new THREE.OrbitControls(camera, renderer.domElement);
-			// controls.addEventListener('change', renderer);
-			controls.addEventListener('change', animate);
-			controls.minDistance = 2;
-			controls.maxDistance = 10;
-			controls
-				.target
-				.set(0, 0, - 0.2);
-			controls.update();
-			window.addEventListener('resize', () => {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize(window.innerWidth, window.innerHeight);
-
-				animate();
-			}, false)
-		}
+          animate();
+        },
+        false
+      );
+    };
     let animate = () => {
       renderer.render(scene, camera);
-    //   requestAnimationFrame(animate);
-    }
-		init();
+      //   requestAnimationFrame(animate);
+    };
+    init();
+  }
 
-	}
-
-	render() {
-		return (<div id="container_model"/>)
-	}
+  render() {
+    return <div id="container_model" />;
+  }
 }
 export default Mask;
